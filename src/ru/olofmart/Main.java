@@ -1,6 +1,7 @@
 package ru.olofmart;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Main {
 
@@ -17,5 +18,25 @@ public class Main {
                     Education.values()[new Random().nextInt(Education.values().length)])
             );
         }
+
+        long countUnderage = persons.stream().filter(x -> x.getAge() < 18).count();
+        System.out.println("\nКоличество несовершеннолетних: " + countUnderage);
+
+        List<String> listRecruiters = persons.stream()
+                .filter(x -> x.getSex().equals(Sex.MAN))
+                .filter(x -> x.getAge() >= 18)
+                .filter(x -> x.getAge() < 27)
+                .map(x -> x.getFamily())
+                .collect(Collectors.toList());
+        System.out.println("\nФамилии первых 15 призывников из списка:");
+        listRecruiters.stream().limit(15).forEach(System.out::println);
+
+        List<Person> listWorkingPersons = persons.stream()
+                .filter(x -> (x.getAge() >= 18))
+                .filter(x -> ((x.getAge() < 60) && (x.getSex().equals(Sex.WOMAN))) || ((x.getAge() < 65) && (x.getSex().equals(Sex.MAN))))
+                .sorted((x1, x2) -> x2.getFamily().compareTo(x2.getFamily()))
+                .collect(Collectors.toList());
+        System.out.println("\nДанные первых 15 работоспособных человек из списка:");
+        listWorkingPersons.stream().limit(15).forEach(System.out::println);
     }
 }
